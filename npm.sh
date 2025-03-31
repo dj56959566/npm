@@ -22,7 +22,6 @@ mkdir -p /etc/docker/npm && cd /etc/docker/npm
 
 echo "🚀 生成 docker-compose.yml..."
 cat > docker-compose.yml <<EOF
-version: '3'
 services:
   npm:
     image: 'jc21/nginx-proxy-manager:latest'
