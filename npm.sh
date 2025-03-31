@@ -2,17 +2,8 @@
 
 set -e  # 遇到错误立即退出
 
-echo "🚀 开始安装 Docker..."
-curl -fsSL https://get.docker.com | bash
-sudo systemctl enable --now docker
-
-echo "🚀 安装 Docker Compose..."
-LATEST_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep '"tag_name":' | cut -d '"' -f 4)
-sudo curl -SL "https://github.com/docker/compose/releases/download/$LATEST_VERSION/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
 echo "🚀 创建 Nginx Proxy Manager 目录..."
-mkdir -p /opt/npm && cd /opt/npm
+mkdir -p /etc/docker/npm && cd /etc/docker/npm
 
 echo "🚀 生成 docker-compose.yml..."
 cat > docker-compose.yml <<EOF
