@@ -2,7 +2,23 @@
 
 set -e  # 遇到错误立即退出
 
-# ...前面检测docker和docker-compose的部分不变...
+echo "🚀 检查 Docker 是否安装..."
+if ! command -v docker &> /dev/null; then
+    echo "🔹 未检测到 Docker，开始安装..."
+    curl -fsSL https://get.docker.com | bash
+    sudo systemctl enable --now docker
+fi
+
+echo "🚀 检查 Docker Compose 是否安装..."
+COMPOSE_CMD=""
+if command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
+elif docker compose version &> /dev/null 2>&1; then
+    COMPOSE_CMD="docker compose"
+else
+    echo "❌ 未检测到 Docker Compose 命令（docker-compose 或 docker compose），请先安装。"
+    exit 1
+fi
 
 echo "🚀 创建 Nginx Proxy Manager 目录..."
 mkdir -p /etc/docker/npm && cd /etc/docker/npm
@@ -35,6 +51,7 @@ EOF
 echo "🚀 启动 Nginx Proxy Manager..."
 docker-compose up -d
 
+IP=$(hostname -I | awk '{print $1}')
 echo "✅ 安装完成！"
-echo "🔹 访问管理面板：http://$(hostname -I | awk '{print $1}'):$PORT_PANEL"
+echo "🔹 访问管理面板：http://$IP:$PORT_PANEL"
 echo "🔹 默认账号：admin@example.com / changeme"
